@@ -1,9 +1,30 @@
 import { createStore, combineReducers } from 'redux';
 import mock from "./mock";
 
+function skillReducer(state, action) {
+    switch (action.type) {
+    case "SKILL_CREATE":
+        let maxId = parseInt(Math.max(...Object.keys(state)), 10) || 0,
+            newId = (maxId + 1).toString();
+        return {
+            ...state,
+            [newId]: {
+                id: newId,
+                name: action.name
+            }
+        };
+    case "SKILL_DELETE":
+        let newState = {...state};
+        delete newState[action.skillId];
+        return newState;
+    default:
+        return state;
+    }   
+}
+
 function aocReducer(state = mock.aoc, action) {
     switch (action.type) {
-    case "UPDATE":
+    case "AOC_UPDATE":
         let currentAoc = state[action.id];
         return {
             ...state,
@@ -13,11 +34,11 @@ function aocReducer(state = mock.aoc, action) {
                 asTable: action.hasOwnProperty("asTable") ? action.asTable : currentAoc.asTable
             }
         };
-    case "DELETE":
+    case "AOC_DELETE":
         let newState = {...state};
         delete newState[action.id];
         return newState;
-    case "CREATE":
+    case "AOC_CREATE":
         let maxId = parseInt(Math.max(...Object.keys(state)), 10) || 0,
             newId = (maxId + 1).toString(); 
         return {
@@ -26,7 +47,16 @@ function aocReducer(state = mock.aoc, action) {
                 id: newId,
                 name: action.name,
                 asTable: action.asTable,
-                skills: {}
+                skill: {}
+            }
+        }
+    case "SKILL_CREATE":
+    case "SKILL_DELETE":
+        return {
+            ...state,
+            [action.id]: {
+                ...state[action.id],
+                skill: skillReducer(state[action.id].skill, action)
             }
         }
     default:
@@ -39,9 +69,13 @@ const store = createStore(combineReducers({
 }), mock);
 
 const aoc = {
-    "create": a => store.dispatch({...a, type: "CREATE"}),
-    "update": a => store.dispatch({...a, type: "UPDATE"}),
-    "remove": a => store.dispatch({...a, type: "DELETE"})
+    "create": a => store.dispatch({...a, type: "AOC_CREATE"}),
+    "update": a => store.dispatch({...a, type: "AOC_UPDATE"}),
+    "remove": a => store.dispatch({...a, type: "AOC_DELETE"}),
+    "skill": {
+        "create": a => store.dispatch({...a, type: "SKILL_CREATE"}),
+        "remove": a => store.dispatch({...a, type: "SKILL_DELETE"})
+    }
 };
 
 export default store;

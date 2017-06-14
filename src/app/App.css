@@ -5,3 +5,7 @@
 .largeMarginTop {
     margin-top: 5em;
 }
+
+div.is-fullwidth {
+    width: 100%;
+}

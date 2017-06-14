@@ -1,7 +1,8 @@
 import React from 'react';
 import InputField from "../common/InputField";
 import SelectField from "../common/SelectField";
-import SkillTable from "./SkillTable";
+import Table from "../common/Table";
+import CreateField from "../common/CreateField";
 
 export default ({area, handlers}) => (
     <div>
@@ -19,6 +20,14 @@ export default ({area, handlers}) => (
                 </div>
             </div>
         </article>
-        <SkillTable />
+        <article className="message is-primary">
+            <div className="message-header">
+                <p>Skills</p>
+            </div>
+            <div className="message-body is-marginless">
+                <CreateField placeholder="Skill name..." create={ handlers.skill.create } />
+                <Table data={ area.skill } columns={ [{key: "name", name: "Name"}] } remove={ handlers.skill.remove} />
+            </div>
+        </article>
     </div>
 );

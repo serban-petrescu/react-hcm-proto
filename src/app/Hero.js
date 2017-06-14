@@ -2,7 +2,8 @@ import React from 'react';
 import Header from "./Header";
 import Home from "./Home";
 import { Route } from 'react-router-dom';
-import AocPage from "../aoc/Page";
+import AocDetailContainer from "../aoc/DetailContainer";
+import AocListContainer from "../aoc/ListContainer";
 
 export default ({isFullHeight}) => (
     <div>
@@ -10,6 +11,9 @@ export default ({isFullHeight}) => (
             <Header />
             <Route exact={true} path="/" component={Home}/>
         </section>
-        <Route path="/aoc" component={AocPage}/>
+        <section className="section">
+            <Route path="/aoc" exact component={AocListContainer}/>
+            <Route path="/aoc/:id" exact component={AocDetailContainer}/>
+        </section>
     </div>
 );
